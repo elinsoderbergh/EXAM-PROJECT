@@ -1,0 +1,61 @@
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Store</title>
+    
+</head>
+
+<body>
+    <header class="main-header">
+        <nav class="main-nav nav">
+            <ul>
+                <li><a href="https://www.google.com">HOME</a></li>
+                <li><a href="https://www.google.com">STORE</a></li>
+                <li><a href="https://www.google.com">ABOUT</a></li>
+            </ul>
+        </nav>
+            
+        <h1 class='title'>RECIPES</h1>
+
+    </header>
+   
+        <div class='search-bar'>
+            <h5>Search for recipe or ingredient</h5>
+            <input type='text' name='search' value='' autocomplete='off' id='myinput' onkeyup='searchFunction()' placeholder='Search for recipe..'>
+         </div>
+    
+       <ul id='catalog'></ul> 
+
+    <section class="container content-section">
+            <h3 class="section-header">Over view shopping list</h3>
+                <div class="cart-row">
+                    <span class="cart-recipe cart-header cart-column">RECEPIE</span>
+                    <span class="cart-time cart-header cart-column">TIME</span>
+                    <span class="cart-quantity cart-header cart-column">QUANTITY</span>
+                </div>
+                    
+                <div class="cart-recipes"></div>
+                    <button class="btn btn-primary btn-purchase" type="button">Add to MY SIDE</button>
+     </section>
+    
+                <div class="cart-item cart-column">
+                    <span class="cart-item-title"></span>
+                </div>
+            
+                    <span class="cart-time cart-column"></span>
+            
+                <div class="cart-quantity cart-column"></div>
+
+                <div>
+                    <button class="btn btn-primary btn-go-to-my-side">Go to MY SIDE</button>
+                </div> 
+
+</body>
+    <script src="../js/recipeconstructor.js"></script>
+    <script src="../js/store.js"></script>
+
+</html>
+        
