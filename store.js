@@ -7,27 +7,20 @@ for (let i = 0; i < allRecipes.length; i++) {
 
 document.getElementById('catalog').innerHTML = html
 
+//change name of button
+const purchaseBtn = document.getElementById('btn-add-to-my-page');
 
-const purchaseBtn = document.getElementById('btn-purchase');
-
-/* if the page is loading, it will run the code. ready after DOMContentLoaded is a function.
-this event will fire as soon as the page is done loading 
-if its not loading, which means it's ready it should fire the function 'ready' */ 
-if (document.readyState == 'loading') {
-    document.addEventListener('DOMContentLoaded', ready)
-    } else {
-        ready()
-    }
-
+//the function ready executes as soon the the function getRecipes has executed!
 function ready() {
-    var removeCartItemButtons = document.getElementsByClassName('btn-danger')
+    let removeCartItemButtons = document.getElementsByClassName('btn-danger')
     console.log(removeCartItemButtons)
     for (var i=0; i < removeCartItemButtons.length; i++) {
         var button = removeCartItemButtons[i]
         button.addEventListener('click', removeCartItem) 
     }
-
-    var quantityInputs = document.getElementsByClassName('cart-quantity-input')
+//the function in itself works but when adding the amount to the shoppingcart the quantity desent follow along. 
+//orginginally we wanted to adjust the recipes for the amout of persons.
+    let quantityInputs = document.getElementsByClassName('cart-quantity-input')
     for (var i = 0; i < quantityInputs.length; i++) {
         var input = quantityInputs[i]
         input.addEventListener('change', quantityChanged)
@@ -39,7 +32,7 @@ function ready() {
         button.addEventListener('click', addToCartClicked)
     }
   
-    document.getElementsByClassName('btn-purchase')[0].addEventListener('click', purchaseClicked)
+    document.getElementsByClassName('btn-add-to-my-page')[0].addEventListener('click', addToMyPageClicked)
 
     if (localStorage.getItem('cartRecipes') === null) { 
         recipes = []; 
@@ -48,62 +41,57 @@ function ready() {
     } else {
         recipes = JSON.parse(localStorage.getItem('cartRecipes'));
         for (let i = 0; i < recipes.length; i++) {
-            recipes[i] = new recipe(recipes[i].recipeTitle, recipes[i].recipeTime, recipes[i].recipeIngredients, recipes[i].recipeAllargies, recipes[i].recipeInstructions);
+            recipes[i] = new recipe(recipes[i].recipeTitle, recipes[i].recipeTime, recipes[i].recipeIngredients, recipes[i].recipeAllergies, recipes[i].recipeInstructions);
         }
-        for (const recipe of recipes) {
+        for (let recipe of recipes) {
             recipe.createHTML();
         }
     }
-  
-    document.getElementsByClassName('btn-go-to-my-side')[0].addEventListener('click', goToMySideClicked)
-
+  //reaserch why there is a [0]
+    document.getElementsByClassName('btn-go-to-my-side')[0].addEventListener('click', goToMyPageClicked)
 }
+ready()
 
 //searchfunction start with a loop through all of the recipes 
-//searchfunction works for recipe name, ingredients and allargies
+//searchfunction works for recipe name, ingredients and allergies
 function searchFunction()  {
     let input = document.getElementById('myinput');
     
     html = '';
     for (let recipe of allRecipes) {
         let ingredientMatches = false;
-        let allargiesMatches = false;
+        let allergiesMatches = false;
 
         for (let ingredient of recipe.recipeIngredients) {
             if(ingredient.toLowerCase().includes(input.value.toLowerCase())) {
                 ingredientMatches = true;
             }
         }
-            for (let allargies of recipe.recipeAllargies) {
-                if(allargies.toLowerCase().includes(input.value.toLowerCase())) {
-                    allargiesMatches = true;
+            for (let allergies of recipe.recipeAllergies) {
+                if(allergies.toLowerCase().includes(input.value.toLowerCase())) {
+                    allergiesMatches = true;
                 }        
             }
-        if (recipe.recipeTitle.toLowerCase().includes(input.value.toLowerCase()) || ingredientMatches || allargiesMatches ){
+        if (recipe.recipeTitle.toLowerCase().includes(input.value.toLowerCase()) || ingredientMatches || allergiesMatches ){
             html += recipe.generateHTMLStructure()
             
         } 
-    document.getElementById('catalog').innerHTML = html
-    let addToCartButtons = document.getElementsByClassName('btn-shop')
-    for (var i = 0; i < addToCartButtons.length; i++) {
-        var button = addToCartButtons[i]
-        button.addEventListener('click', addToCartClicked)
-        }
+        searchMultipleTimes(); 
+    }
 
+}
+
+function addToMyPageClicked() {
+    localStorage.setItem('myRecipes', JSON.stringify(recipes))
+    localStorage.setItem('cartRecipes', JSON.stringify([]));
+    alert('You have now saved a recipe to your favorites')
+    let cartRecipes = document.getElementsByClassName('cart-recipes')[0]
+    while (cartRecipes.hasChildNodes()) {
+    cartRecipes.removeChild(cartRecipes.firstChild)
     }
 }
 
-function purchaseClicked() {
-        localStorage.setItem('myRecipes', JSON.stringify(recipes))
-        localStorage.setItem('cartRecipes', JSON.stringify([]));
-        alert('You have now added a recipe to your shopping list')
-        var cartRecipes = document.getElementsByClassName('cart-recipes')[0]
-        while (cartRecipes.hasChildNodes()) {
-        cartRecipes.removeChild(cartRecipes.firstChild)
-    }
-}
-
-function goToMySideClicked() {
+function goToMyPageClicked() {
     location.assign('myPage.html')
 }
 
@@ -119,7 +107,6 @@ function quantityChanged(event) {
     }
 }
 
-
 function addToCartClicked(event) {
     button = event.target
     let shopItem = button.parentElement.parentElement.parentElement //to grab the class/div
@@ -127,25 +114,33 @@ function addToCartClicked(event) {
     console.log(title)
     let time = shopItem.getElementsByClassName('shop-item-time')[0].innerHTML
     let ingredients = shopItem.getElementsByClassName('shop-item-ingredients')[0].innerHTML
-    let allargies = shopItem.getElementsByClassName('shop-item-allargies')[0].innerHTML
+    let allergies = shopItem.getElementsByClassName('shop-item-allergies')[0].innerHTML
     let instructions = shopItem.getElementsByClassName('shop-item-instructions')[0].innerHTML
-    addItemToCart(title, time, ingredients, allargies, instructions)
+    addItemToCart(title, time, ingredients, allergies, instructions)
 }
 
-function addItemToCart(title, time, ingredients, allargies, instructions) {
+function addItemToCart(title, time, ingredients, allergies, instructions) {
 
-    //CHECK: check if localStorge for the key "cartRecipes" is empty or not   
+    //CHECK: check localStorge if the key "cartRecipes" is empty or not   
     let cartRecipes = document.getElementsByClassName('cart-recipes')[0]
     var cartItemNames = document.getElementsByClassName('cart-item-title')
     for (var i = 0; i < cartItemNames.length; i++) {
         if (cartItemNames[i].innerText == title) {
-            alert('This item is already added to the cart')
+            alert('This recipe is already added to your page')
             return
         }
     }
-    let newRecipe = new recipe(title, time, ingredients, allargies, instructions);
+    let newRecipe = new recipe(title, time, ingredients, allergies, instructions);
     recipes.push(newRecipe);
     newRecipe.createHTML();
     localStorage.setItem('cartRecipes', JSON.stringify(recipes));    
 }
 
+function searchMultipleTimes() {
+    document.getElementById('catalog').innerHTML = html
+    let addToCartButtons = document.getElementsByClassName('btn-shop')
+    for (var i = 0; i < addToCartButtons.length; i++) {
+        var button = addToCartButtons[i]
+        button.addEventListener('click', addToCartClicked)
+    }
+}
