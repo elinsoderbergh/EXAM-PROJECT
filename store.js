@@ -63,8 +63,6 @@ function ready() {
 //searchfunction works for recipe name, ingredients and allargies
 function searchFunction()  {
     let input = document.getElementById('myinput');
-    let filter = input.value.toUpperCase();
-    let ul = document.getElementById('catalog');
     
     html = '';
     for (let recipe of allRecipes) {
