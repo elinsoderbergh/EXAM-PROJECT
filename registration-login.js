@@ -21,7 +21,7 @@ if (submitBtn) {
     if (localStorage.getItem('users') === null) {  
         users = [
             //hard coded user, will pop up in the localstorage. We could leave this array empty if we want to. 
-            new User('Elin', 'Söderbergh', 'email@gmail.com', 'elinelin', '123456789')
+            new User('User1', 'User1', 'user1@gmail.com', 'user1', '123456789')
         ]; 
         localStorage.setItem('users', JSON.stringify(users));
     } else {
@@ -48,7 +48,7 @@ if (submitBtn) {
 /*  test if the username is alredy existing, it loops through the users array. If username is already extisting a window will pop.
     The identity (===) operator behaves identically to the equality (==) operator except no type conversion is done, 
     and the types must be the same to be considered equal. */
-    for(var i = 0; i < users.length; i++) {
+    for(let i = 0; i < users.length; i++) {
         if(username.value == users[i].username) {
             window.alert('That username is already taken, please choose another!')
             return false;
@@ -83,6 +83,23 @@ Then we test whether the passowrd is longer than 8 characters and if the typed p
 // %%%%%%%%%%%%%%%%%%%%%
 
 //LOGIN 
+//to be able to use the login function without going through the registration js, we need to collect the users from local storage is any is extisting
+//otherwise we create a hardcode user so we could use. This is a limitiation of the system. 
+function loadMyUsers () {
+    let users = JSON.parse(localStorage.getItem('users'));
+    
+    for (let i = 0; i < users.length; i++) {
+        users[i] = new User(users[i].firstname, users[i].lastname, users[i].email, users[i].username, users[i].password);
+
+        if (localStorage.getItem('users') === null) { 
+            users =[
+                new User('User1', 'User1', 'user1@gmail.com', 'user1', '123456789')
+            ]; 
+            localStorage.setItem('users', JSON.stringify(users)); 
+        }
+    }
+    loadMyUsers()
+}
 
 //when loginbtn is pushed the following function will execute
 if (loginBtn) {
@@ -96,29 +113,32 @@ loginBtn.onclick = function () {
 
     //local storage is connected to the one from the registration functionality
     if (localStorage.getItem('users') === null) { 
-        users =[]; //since it's an empty squared bracket, the stored users from local storage comes in here.
+        users =[
+            new User('User1', 'User1', 'user1@gmail.com', 'user1', '123456789')
+        ]; //since it's an empty squared bracket, the stored users from local storage comes in here.
         localStorage.setItem('users', JSON.stringify(users));   
     } else {
         users = JSON.parse(localStorage.getItem('users'));
-    for (let i = 0; i < users.length; i++) {
-        users[i] = new User(users[i].firstname, users[i].lastname, users[i].email, users[i].username, users[i].password);
-    }
+        for (let i = 0; i < users.length; i++) {
+            users[i] = new User(users[i].firstname, users[i].lastname, users[i].email, users[i].username, users[i].password);
+        }
     }
     
     // loop through all the user objects in local storage and confrim if the username and password are correct
     for(let i = 0; i < users.length; i++) {
-        localStorage.setItem('users', JSON.stringify(users));
         
         /* check if the username and password is incorrect for the user
         by having the ! before we do not get all the worngs befor getting it right. 
         error if username and password don't match, if correct username and password, redirect to a new page*/
-            if(!usernameLogin.value == users[i].username && !passwordLogin.value == users[i].password) {  
-            alert('Incorrect username or password');
-            } else {
-            alert(`Welcome ${usernameLogin.value}`);
-            location.assign("store.html") 
+            if(usernameLogin.value !== users[i].username || passwordLogin.value !== users[i].password) {  
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Incorrect username or password');
                 break;
+            } else {
+                alert(`Welcome ${usernameLogin.value}`);
+                location.assign("store.html") 
             }
         }
     }
 }
+
