@@ -1,12 +1,12 @@
 //r
 class recipe {
 
-    constructor(recipeTitle, recipeTime, recipeIngredients, recipeAllargies, recipeInstructions) {
+    constructor(recipeTitle, recipeTime, recipeIngredients, recipeAllergies, recipeInstructions) {
 
         this.recipeTitle = recipeTitle;
         this.recipeTime = recipeTime;
         this.recipeIngredients = recipeIngredients;
-        this.recipeAllargies = recipeAllargies;
+        this.recipeAllergies = recipeAllergies;
         this.recipeInstructions = recipeInstructions;
     }
 
@@ -16,23 +16,26 @@ class recipe {
         <div class="shop-item">
                 <div>
                     <span class="shop-item-title">${this.recipeTitle}</span> 
-                </div>              
+                </div>
+
                 <div>
                     <span class="shop-item-time">${this.recipeTime + ' min'}</span>
                 <div>
                     <span class="shop-item-ingredients">${'Ingredients: ' + this.recipeIngredients}</span>
                 </div>
+
                 <div>
-                    <span class="shop-item-allargies"></span>
+                    <span class="shop-item-allergies"></span>
                 </div>
+
                 <div>
                     <span class="shop-item-instructions">${'Instructions: ' + this.recipeInstructions}</span>
                 </div>
-                <div class="cart-quantity cart-column">
-                    <input class="cart-quantity-input" type="number" value="1"> 
                 
-            <button class="btn btn-primary btn-shop" type="button">ADD TO SHOPPING LIST</button>       
-        </div>
+                <div class="cart-column">
+                    <input class="cart-quantity-input" type="number" value="1"> 
+                        <button class="btn-shop" type="button">ADD TO SHOPPING LIST</button>       
+                </div>
     </div>`
     }
 
@@ -42,20 +45,17 @@ class recipe {
         cartRow.classList.add('cart-row')
     
         var cartRowContents = `
-        <div class="cart-column">
-            <span class="cart-item-title">${this.recipeTitle}</span>
-        </div>
-            <span class="cart-column">${this.recipeTime}</span>
-            <div><span class="shop-item-ingredients">${this.recipeIngredients}</span></div>
-        <div class="cart-quantity cart-column">
-            <input class="cart-quantity-input" type="number" value="1">
-            <button class="btn btn-danger" type="button">REMOVE</button>
+        <div class="cart-column"></div>
+            <div>${this.recipeTitle}</div>
+            <div>${this.recipeTime}</div>
+            <div>${this.recipeIngredients}</div>
+            <div class="cart-column">
+            <button class="btn-danger" type="button">REMOVE</button>
         </div>`
 
         cartRow.innerHTML = cartRowContents
         cartRecipes.append(cartRow)
         cartRow.getElementsByClassName('btn-danger')[0].addEventListener('click', removeCartItem)
-        // cartRow.getElementsByClassName('cart-quantity-input')[0].addEventListener('change', quantityChanged)
 
     }
     
@@ -72,7 +72,7 @@ class recipe {
                 ${this.recipeIngredients}
             </div>
             <div>
-                ${this.recipeAllargies}</li>
+                ${this.recipeAllergies}</li>
             </div>
         </div>`
     }
@@ -111,9 +111,3 @@ recipes =
 return recipes
 
 }
-
-
-
-
-
-
