@@ -1,3 +1,6 @@
+/* we start with a variable being added a value of a function that returns all the recipes in the recipe array.
+then the collected recipes gets turned into html code and displayed on the webside thrugh the for loop 
+that loops though the entore array and than push the html out thrugh the id 'catalog', found on store.html */
 let allRecipes = getRecipes()  
 
 let html = ''
@@ -7,28 +10,25 @@ for (let i = 0; i < allRecipes.length; i++) {
 
 document.getElementById('catalog').innerHTML = html
 
-//change name of button
-const purchaseBtn = document.getElementById('btn-add-to-my-page');
-
-//the function ready executes as soon the the function getRecipes has executed!
+//the function ready executes as soon the the function getRecipes has executed! The function consists of multiple functions for createing a better structure.
 function ready() {
     let removeCartItemButtons = document.getElementsByClassName('btn-danger')
     console.log(removeCartItemButtons)
-    for (var i=0; i < removeCartItemButtons.length; i++) {
-        var button = removeCartItemButtons[i]
+    for (let i=0; i < removeCartItemButtons.length; i++) {
+        let button = removeCartItemButtons[i]
         button.addEventListener('click', removeCartItem) 
     }
-//the function in itself works but when adding the amount to the shoppingcart the quantity desent follow along. 
-//orginginally we wanted to adjust the recipes for the amout of persons.
+/* the function in itself works but when adding the amount to the shoppingcart the quantity desent follow along. 
+orginginally we wanted to adjust the recipes for the amout of persons. */
     let quantityInputs = document.getElementsByClassName('cart-quantity-input')
-    for (var i = 0; i < quantityInputs.length; i++) {
-        var input = quantityInputs[i]
+    for (let i = 0; i < quantityInputs.length; i++) {
+        let input = quantityInputs[i]
         input.addEventListener('change', quantityChanged)
     }
 
-    var addToCartButtons = document.getElementsByClassName('btn-shop')
-    for (var i = 0; i < addToCartButtons.length; i++) {
-        var button = addToCartButtons[i]
+    let addToCartButtons = document.getElementsByClassName('btn-shop')
+    for (let i = 0; i < addToCartButtons.length; i++) {
+        let button = addToCartButtons[i]
         button.addEventListener('click', addToCartClicked)
     }
   
@@ -47,13 +47,12 @@ function ready() {
             recipe.createHTML();
         }
     }
-  //reaserch why there is a [0]
     document.getElementsByClassName('btn-go-to-my-side')[0].addEventListener('click', goToMyPageClicked)
 }
 ready()
 
-//searchfunction start with a loop through all of the recipes 
-//searchfunction works for recipe name, ingredients and allergies
+/* searchfunction start with a loop through all of the recipes 
+searchfunction works for recipe name, ingredients and allergies */
 function searchFunction()  {
     let input = document.getElementById('myinput');
     
@@ -81,32 +80,40 @@ function searchFunction()  {
 
 }
 
+//here starts all the function declarations that is used in the function ready ()
+
+//function that executes when button "add to my page" is clicked
 function addToMyPageClicked() {
     localStorage.setItem('myRecipes', JSON.stringify(recipes))
     localStorage.setItem('cartRecipes', JSON.stringify([]));
     alert('You have now saved a recipe to your favorites')
+
     let cartRecipes = document.getElementsByClassName('cart-recipes')[0]
     while (cartRecipes.hasChildNodes()) {
     cartRecipes.removeChild(cartRecipes.firstChild)
     }
 }
 
+//function that executes when button "go to my page" is clicked
 function goToMyPageClicked() {
     location.assign('myPage.html')
 }
 
+//function that executes when "remove" button is clicked
 function removeCartItem(event) {  
-    var buttonClicked = event.target
+    let buttonClicked = event.target
     buttonClicked.parentElement.parentElement.remove()
 }
 
+//function that regulates the quantity but not really used
 function quantityChanged(event) {
-    var input = event.target
+    let input = event.target
     if (isNaN(input.value) || input.value <= 0) { //Nan = to check if the input is a number or not, and input.value <= 0 is to make sure the nu,ber added is positive
         input.value = 1 //lowest number to be able to add should be one
     }
 }
 
+//function that executes when button "add to favorites" is clicked
 function addToCartClicked(event) {
     button = event.target
     let shopItem = button.parentElement.parentElement.parentElement //to grab the class/div
@@ -119,12 +126,11 @@ function addToCartClicked(event) {
     addItemToCart(title, time, ingredients, allergies, instructions)
 }
 
-function addItemToCart(title, time, ingredients, allergies, instructions) {
-
-    //CHECK: check localStorge if the key "cartRecipes" is empty or not   
-    let cartRecipes = document.getElementsByClassName('cart-recipes')[0]
-    var cartItemNames = document.getElementsByClassName('cart-item-title')
-    for (var i = 0; i < cartItemNames.length; i++) {
+//function that add an item to "favorites"
+function addItemToCart(title, time, ingredients, allergies, instructions) { 
+    cartRecipes = document.getElementsByClassName('cart-recipes')[0]
+    let cartItemNames = document.getElementsByClassName('cart-item-title')
+    for (let i = 0; i < cartItemNames.length; i++) {
         if (cartItemNames[i].innerText == title) {
             alert('This recipe is already added to your page')
             return
@@ -136,11 +142,12 @@ function addItemToCart(title, time, ingredients, allergies, instructions) {
     localStorage.setItem('cartRecipes', JSON.stringify(recipes));    
 }
 
+//this function makes the user to search for one recipe, add that ant then be able search for another recipe and add that aswell. 
 function searchMultipleTimes() {
     document.getElementById('catalog').innerHTML = html
     let addToCartButtons = document.getElementsByClassName('btn-shop')
-    for (var i = 0; i < addToCartButtons.length; i++) {
-        var button = addToCartButtons[i]
+    for (let i = 0; i < addToCartButtons.length; i++) {
+        let button = addToCartButtons[i]
         button.addEventListener('click', addToCartClicked)
     }
 }
